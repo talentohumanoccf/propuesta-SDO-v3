@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propuesta Estrategica SDO 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700;900&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --sdo-teal: #78A49B;
+            --sdo-pink: #F5C2C2;
+            --sdo-yellow: #FEFE96;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-urbanist {
+            font-family: 'Urbanist', sans-serif;
+        }
+
+        .text-justify {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .node-pulse {
+            animation: pulse-amber 2s infinite;
+        }
+
+        @keyframes pulse-amber {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 25px 10px rgba(245, 158, 11, 0.2);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .node-3d {
+            box-shadow:
+                0 6px 0 rgba(0, 0, 0, 0.08),
+                0 10px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .node-3d:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 11px 0 rgba(0, 0, 0, 0.08),
+                0 20px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .node-3d:active {
+            transform: translateY(2px);
+            box-shadow:
+                0 2px 0 rgba(0, 0, 0, 0.08),
+                0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .grid-pattern {
+            background-image: radial-gradient(#475569 0.8px, transparent 0.8px);
+            background-size: 50px 50px;
+        }
+
+        .dark .grid-pattern {
+            background-image: radial-gradient(#f59e0b 0.8px, transparent 0.8px);
+        }
+
+        .bg-integration {
+            background-color: #020617;
+            /* slate-950 */
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .dark .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .text-gradient-amber {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fde68a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .shiny-logo-container::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    transparent 45%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    transparent 55%);
+            animation: shine 4s infinite;
+            transform: rotate(30deg);
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) rotate(30deg);
+            }
+
+            100% {
+                transform: translateX(100%) rotate(30deg);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        #maximize-modal-content {
+            cursor: grab;
+        }
+
+        #maximize-modal-content:active {
+            cursor: grabbing;
+        }
+
+        #zoom-wrapper {
+            transition: transform 0.1s cubic-bezier(0.1, 0, 0.2, 1);
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        .floating-controls {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #020617;
+            /* slate-950 */
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+            perspective: 1200px;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 180px;
+            height: auto;
+            animation: logo-jump 2s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+            filter: drop-shadow(0 0 30px rgba(245, 158, 11, 0.4));
+        }
+
+        @keyframes logo-jump {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            40% {
+                transform: translateY(-30px) scale(0.98, 1.05);
+            }
+
+            60% {
+                transform: translateY(-15px) scale(0.99, 1.02);
+            }
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-top: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+            animation: loader-slide 1.5s infinite linear;
+        }
+
+        @keyframes loader-slide {
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(200%);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 transition-colors duration-700 min-h-screen">
+
+    <div id="preloader">
+        <img src="https://i.imgur.com/cSs7YG2.jpeg" alt="Logo SDO"
+            class="loader-logo rounded-full aspect-square object-cover shadow-2xl border-4 border-white/5">
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+        <div class="mt-6 text-[10px] font-black uppercase tracking-[0.5em] text-amber-500/60 animate-pulse">Cargando
+            Estrategia</div>
+    </div>
+
+    <div class="fixed top-0 left-0 w-full h-1 bg-black/10 z-[100]">
+        <div id="progress-bar" class="h-full bg-teal-500 transition-all duration-500" style="width: 16.66%"></div>
+    </div>
+
+    <header
+        class="fixed top-0 left-0 w-full p-5 flex justify-between items-center z-50 bg-white/60 dark:bg-slate-950/60 backdrop-blur-md border-b border-slate-200/50 dark:border-white/5">
+        <div class="flex items-center gap-4">
+            <div
+                class="bg-slate-900 p-2 rounded-xl shadow-xl border border-white/10 flex items-center justify-center min-w-[60px]">
+                <img src="https://i.imgur.com/yyI6FWO.png" alt="Logo SDO" class="h-10 w-auto object-contain">
+            </div>
+            <div class="hidden md:block">
+                <h1 class="text-base font-black uppercase tracking-tighter leading-none dark:text-white"
+                    id="header-title">Propuesta Estrategica SDO</h1>
+                <p class="text-[9px] font-bold uppercase tracking-[0.25em] text-slate-500 dark:text-amber-400/90"
+                    id="header-subtitle">Sustentación Técnica 2026</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="https://talentohumanoccf.github.io/dashboard-SDO/" target="_blank"
+                class="flex items-center gap-2.5 px-5 py-2.5 rounded-full font-black text-[10px] uppercase tracking-widest transition-all bg-amber-500 text-white shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 hover:bg-amber-600"
+                title="Ver Indicadores SDO">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Indicadores</span>
+            </a>
+            <button onclick="toggleIntegrationMode()"
+                class="flex items-center gap-3 px-6 py-2.5 rounded-full font-black text-[10px] uppercase tracking-widest transition-all border border-slate-200 bg-white/90 text-slate-600 shadow-md hover:scale-105 active:scale-95"
+                id="integration-toggle">
+                <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                <span>Ver Capas de Valor</span>
+            </button>
+        </div>
+    </header>
+
+    <button onclick="prevSlide()" id="prev-btn-side"
+        class="fixed left-6 top-1/2 -translate-y-1/2 z-[60] p-4 rounded-full nav-btn border border-black/5 text-slate-400 hover:text-teal-600 dark:hover:text-amber-400 opacity-0 pointer-events-none">
+        <i data-lucide="chevron-left" class="w-8 h-8"></i>
+    </button>
+
+    <button onclick="nextSlide()" id="next-btn-side"
+        class="fixed right-6 top-1/2 -translate-y-1/2 z-[60] p-4 rounded-full nav-btn border border-black/5 text-slate-400 hover:text-teal-600 dark:hover:text-amber-400">
+        <i data-lucide="chevron-right" class="w-8 h-8"></i>
+    </button>
+
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex gap-3 px-6 py-3 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-lg border border-black/5 dark:border-white/10"
+        id="dots-container"></div>
+
+    <main
+        class="min-h-screen flex flex-col items-center justify-center p-4 pt-32 pb-32 relative grid-pattern transition-all duration-1000"
+        id="main-bg">
+        <div id="slide-container" class="w-full max-w-7xl"></div>
+    </main>
+
+    <div id="node-modal" class="fixed inset-0 z-[200] hidden pointer-events-none transition-all duration-300">
+        <div class="absolute p-4 rounded-xl w-64 shadow-2xl border transition-all duration-300 scale-95 opacity-0 bg-white border-slate-100 pointer-events-auto"
+            id="modal-content" style="top: 0; left: 0;">
+            <button onclick="closeModal()"
+                class="absolute top-3 right-3 text-slate-300 hover:text-slate-900 transition-colors">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+            <div id="modal-tag"
+                class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[7px] font-black uppercase tracking-wider mb-2.5 bg-teal-500/10 text-teal-600">
+                <i data-lucide="award" class="w-2 h-2"></i> Ficha Técnica
+            </div>
+            <h3 id="modal-title" class="text-sm font-black mb-1 leading-tight text-slate-900 uppercase">Proceso</h3>
+            <p id="modal-desc" class="text-[9.5px] mb-3 text-justify leading-relaxed font-bold text-slate-400">Resumen
+                técnico.</p>
+
+            <div class="p-2.5 rounded-lg space-y-2 mb-3 bg-slate-50/50 border border-slate-100" id="modal-info-box">
+                <div class="flex items-start gap-1.5 text-left">
+                    <div class="p-1 bg-indigo-500/10 rounded text-indigo-500 mt-0.5"><i data-lucide="target"
+                            class="w-2.5 h-2.5"></i></div>
+                    <div>
+                        <span
+                            class="text-[7px] font-black block uppercase text-slate-400 mb-0.5 tracking-wider font-urbanist">Foco</span>
+                        <span id="modal-vision"
+                            class="text-[10px] font-bold text-slate-800 leading-tight">Visión.</span>
+                    </div>
+                </div>
+            </div>
+
+            <section class="p-2.5 rounded-lg border-l-2 border-amber-400 text-left bg-amber-50/10"
+                id="modal-challenge-box">
+                <div
+                    class="flex items-center gap-1 font-black text-[7px] uppercase mb-0.5 tracking-wide text-amber-600 font-urbanist">
+                    <i data-lucide="zap" class="w-2 h-2"></i> Reto
+                </div>
+                <p id="modal-challenge"
+                    class="text-[10px] italic text-justify font-bold leading-relaxed text-amber-900/60 font-urbanist">
+                    "Reto operativo."</p>
+            </section>
+        </div>
+    </div>
+
+    <div id="maximize-modal"
+        class="fixed inset-0 z-[300] hidden flex-col bg-slate-950/98 backdrop-blur-3xl overflow-y-auto">
+        <header
+            class="sticky top-0 left-0 w-full p-8 flex justify-between items-center z-[310] bg-slate-950/80 backdrop-blur-md border-b border-white/10">
+            <div class="flex items-center gap-4 text-white">
+                <i data-lucide="maximize-2" class="w-8 h-8 text-amber-500"></i>
+                <h3 class="text-2xl font-black uppercase tracking-tight">Estructura Detallada</h3>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleFullscreen()"
+                    class="p-4 rounded-2xl bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 border border-white/10"
+                    title="Pantalla Completa">
+                    <i data-lucide="monitor" class="w-8 h-8"></i>
+                </button>
+                <button onclick="closeMaximize()"
+                    class="p-4 rounded-2xl bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 border border-white/10"
+                    title="Salir de Exploración">
+                    <i data-lucide="shrink" class="w-8 h-8"></i>
+                </button>
+            </div>
+        </header>
+        <div id="maximize-modal-content"
+            class="flex-1 w-full flex flex-col items-center justify-start p-12 overflow-y-auto relative select-none">
+            <div
+                class="absolute bottom-12 right-12 z-[320] flex flex-col gap-3 p-3 rounded-[2.5rem] floating-controls shadow-2xl">
+                <button onclick="changeZoom(0.2)"
+                    class="p-4 rounded-full bg-white/5 hover:bg-white/20 text-white transition-all"><i
+                        data-lucide="zoom-in" class="w-6 h-6"></i></button>
+                <div class="w-full h-[1px] bg-white/10"></div>
+                <button onclick="resetZoom()"
+                    class="p-4 rounded-full bg-white/5 hover:bg-white/20 text-white transition-all text-[10px] font-black uppercase">1:1</button>
+                <div class="w-full h-[1px] bg-white/10"></div>
+                <button onclick="changeZoom(-0.2)"
+                    class="p-4 rounded-full bg-white/5 hover:bg-white/20 text-white transition-all"><i
+                        data-lucide="zoom-out" class="w-6 h-6"></i></button>
+            </div>
+            <div id="zoom-wrapper" class="flex items-center justify-center min-w-full min-h-full"></div>
+        </div>
+    </div>
+
+    <script>
+        const detailedNodes = {
+            root: { title: 'Subdirección Desarrollo Organizacional', color: 'bg-[#78A49B] text-[#1a2e2a]', desc: 'Dirección estratégica para asegurar que la cultura, la tecnología y el talento converjan en alta productividad interna.', vision: 'Puente crítico entre la visión ejecutiva y la ejecución operativa.', challenge: 'Superar el vacío de decisión entre los equipos que gestan ideas y la dirección que las aprueba.' },
+            cultura_bienestar: { title: 'Cultura, bienestar y experiencia del empleado', color: 'bg-[#78A49B] text-[#1a2e2a]', desc: 'Foco en la salud mental, el clima laboral y la satisfacción integral del colaborador.', vision: 'Bienestar como indicador de productividad.', challenge: 'Romper silos organizacionales y personalizar el ciclo de vida del colaborador.' },
+            equipo_psicosocial: { title: 'Equipo psicosocial', color: 'bg-[#F5C2C2] text-[#4a2a2a]', desc: 'Apoyo integral al colaborador y su familia para facilitar la Gestión del Cambio institucional.', vision: 'Resiliencia humana ante el cambio.', challenge: 'Garantizar el acompañamiento psicosocial efectivo en cada hito de transformación.' },
+            seleccion_personal: { title: 'Selección de personal', color: 'bg-[#78A49B] text-[#1a2e2a]', desc: 'Captación de talento alineado a metodologías ágiles y cultura neuronal de cambio.', vision: 'Identificar el ADN cultural de adaptabilidad.', challenge: 'Evolucionar los criterios de selección hacia perfiles con mentalidad de aprendizaje digital.' },
+            empleo_talento_nuevo: { title: 'Empleo y Gestión del Talento', color: 'bg-[#FEFE96] text-[#4a4a1a]', desc: 'Gestión y colocación de talento alineado a las necesidades del mercado moderno.', vision: 'Socio de relacionamiento estratégico externo.', challenge: 'Convertir a la Caja en un aliado metodológico para la gestión del talento externo y referente de empleabilidad.' },
+            desarrollo_formacion: { title: 'Desarrollo y formación', color: 'bg-[#78A49B] text-[#1a2e2a]', desc: 'Fortalecimiento de la cultura, planes de carrera y formación continua del talento institucional.', vision: 'Desarrollo de capacidades de alto impacto.', challenge: 'Cerrar brechas de competencias críticas mediante un aprendizaje continuo y escalable.' },
+            transformacion_digital_nuevo: { title: 'Transformación digital', color: 'bg-[#FEFE96] text-[#4a4a1a]', desc: 'Implementación del Modelo TED para automatizar tareas repetitivas y liberar el potencial del equipo.', vision: 'Fusión de productividad con tecnología avanzada.', challenge: 'Minimizar tareas mecánicas para elevar el rol del talento hacia el análisis estratégico.' },
+            vector_cultura: { title: 'Vectores de la transformación', color: 'bg-[#F5C2C2] text-[#4a2a2a]', desc: 'Ejes fundamentales de la evolución organizacional: Cultura (Mentalidad), Negocio Digital (Estrategia) y Tecnología (Herramientas).', vision: 'Cultura neuronal ágil impulsada por la integración digital.', challenge: 'Alinear los tres vectores para asegurar una adopción tecnológica con propósito y alto impacto.' },
+            gestion_competencias: { title: 'Gestión de competencias, evaluación y efectividad organizacional', color: 'bg-[#78A49B] text-[#1a2e2a]', desc: 'Mapeo de habilidades y Evaluaciones 360 con impacto directo en el desempeño dinámico.', vision: 'Estructura dinámica basada en méritos.', challenge: 'Mantener manuales de funciones alineados a las exigencias de la competitividad moderna.' },
+            historias_laborales: { title: 'Historias Laborales', color: 'bg-[#F5C2C2] text-[#4a2a2a]', desc: 'Trazabilidad digital completa del ciclo de vida del colaborador en la organización.', vision: 'Trazabilidad 100% digital centralizada.', challenge: 'Lograr la digitalización total de expedientes para habilitar el análisis de datos de personas.' },
+            nomina_seguridad: { title: 'Nómina y seguridad social', color: 'bg-[#78A49B] text-[#1a2e2a]', desc: 'Garantía del flujo transaccional, pagos precisos y soporte operacional en Gestión Humana.', vision: 'Excelencia operativa y eficiencia prestacional.', challenge: 'Automatización total de flujos de pago para integrarlos al modelo de productividad.' },
+            relaciones_laborales: { title: 'Relaciones laborales', color: 'bg-[#78A49B] text-[#1a2e2a]', desc: 'Gestión de acuerdos, seguridad jurídica y diálogo constructivo basado en la cultura neuronal.', vision: 'Paz laboral y equilibrio normativo.', challenge: 'Modernizar los acuerdos laborales para soportar modalidades de trabajo híbridas y flexibles.' },
+            control_disciplinario: { title: 'Control Disciplinario', color: 'bg-[#F5C2C2] text-[#4a2a2a]', desc: 'Garantía del cumplimiento de normas y ética empresarial.', vision: 'Transparencia y conducta preventiva institucional.', challenge: 'Migrar de un control fiscalizador a uno preventivo basado en la pedagogía cultural.' },
+            negociaciones_col_nuevo: { title: 'Negociaciones Colectivas', color: 'bg-[#F5C2C2] text-[#4a2a2a]', desc: 'Diálogo con asociaciones de empleados para la mejora del clima y acuerdos mutuos.', vision: 'Paz laboral sostenible.', challenge: 'Alinear los intereses de los colaboradores con la sostenibilidad estratégica institucional.' },
+            productividad: { title: 'Productividad', color: 'bg-[#78A49B] text-[#1a2e2a]', desc: 'Apoyo metodológico transversal a proyectos PMO para asegurar eficiencia operativa sistémica.', vision: 'Eficiencia operativa medible.', challenge: 'Convertir la productividad en una métrica objetiva basada en datos y automatización.' },
+            gestion_innovacion: { title: 'Gestión de la Innovación', color: 'bg-[#FEFE96] text-[#4a4a1a]', desc: 'Fomento de la creatividad y prototipado de soluciones disruptivas para la Caja.', vision: 'Cultura de innovación abierta y colaborativa.', challenge: 'Materializar ideas en proyectos escalables que generen valor real al afiliado.' }
+        };
+
+        const slides = [
+            { id: 'vision', title: 'Propuesta Estratégica SDO', subtitle: 'Consolidación de la Subdirección de Desarrollo Organizacional', content: 'El marco estratégico para la creación de la Subdirección de Desarrollo Organizacional en <b class="text-amber-400">Comfamiliar Risaralda</b> propone elevar la gestión humana a un nivel directivo autónomo para respaldar el <b class="text-amber-400">Plan de Gestión 2026-2030</b> y sus grandes proyectos de expansión territorial. Ante un índice de rotación laboral del 41% en el país y los altos costos que implica reemplazar colaboradores, la iniciativa busca dejar de tratar al talento como un simple trámite operativo integrado en otras áreas administrativas. Para ello, la nueva subdirección se estructura en tres componentes clave: <b class="text-amber-400">Gestión de Talento</b>, <b class="text-amber-400">Desarrollo y Cultura</b>, y <b class="text-amber-400">Transformación Organizacional</b>. Mediante un modelo de seguimiento basado en <b class="text-amber-400">metas OKR</b>, este marco tiene como objetivo central alinear el capital humano con los retos de la institución, mitigar los riesgos laborales, impulsar la adopción tecnológica y consolidar una cultura organizacional medible que actúe como una verdadera <b class="text-amber-400">ventaja competitiva</b>.', icon: 'sparkles', isDark: true, points: ['Cultura Neuronal Ágil', 'Modelo TED', 'Employee Experience'] },
+            { id: 'justificacion', title: 'Justificación Estratégica', subtitle: 'Evolución Estructural Estratégica', content: 'Nuestra organización demanda una evolución en su estructura. Mientras la <b class="text-indigo-600 dark:text-indigo-400">Subdirección Administrativa</b> se enfoca en garantizar la <b class="text-teal-600 dark:text-teal-400 font-bold">excelencia operativa</b> y el <b class="text-teal-600 dark:text-teal-400 font-bold">soporte transversal</b>, la creación de la <b class="text-amber-600 dark:text-amber-400 font-black">SDO</b> asegura un espacio dedicado exclusivamente a la <b class="text-amber-600 dark:text-amber-400 font-black">estrategia humana</b>. Esta especialización potencia a la Caja con un <b class="text-amber-600 dark:text-amber-400">Enfoque Diferenciado</b> (potenciación humana proactiva), mayor <b class="text-amber-600 dark:text-amber-400">Agilidad de Decisión</b> (flujos directos y dinámicos) y una profunda <b class="text-amber-600 dark:text-amber-400">Especialización Metodológica</b> (liderazgo con ADN de cambio).', icon: 'network', isDark: false, adminTags: ['Excelencia Operativa', 'Soporte Transversal', 'Cumplimiento Institucional'] },
+            { id: 'blueprint', title: 'Arquitectura de Procesos Integrados', subtitle: 'Estructura SDO 2026', content: 'Haz clic en cada proceso para identificar cómo se integra en la estructura y conocer su reto específico.', icon: 'layout-template', isMap: true, isDark: true },
+            { id: 'pmo', title: 'Soporte Transversal PMO', subtitle: 'El Corazón Metodológico', content: 'La SDO asegura que cada proyecto de la PMO tenga éxito cultural mediante acompañamiento en la adopción de herramientas, asegurando que la agilidad no sea solo una palabra sino una realidad operativa que conecte ideas con ejecución.', icon: 'brain-circuit', isDark: false, highlights: [{ label: 'Gestión del Cambio', desc: 'Garantizar la adopción tecnológica.' }, { label: 'Cultura Neuronal', desc: 'Implementar agilidad real en equipos.' }, { label: 'Cierre de Brechas', desc: 'Eliminar el vacío entre ideas y ejecución.' }] },
+            { id: 'ted', title: 'Modelo TED: Productividad + Automatización', subtitle: 'Tecnología · Estrategia · Desempeño', content: 'La convergencia de estos tres pilares permite eliminar tareas mecánicas y elevar el rol del talento hacia el análisis estratégico y la innovación real.', icon: 'cpu', isDark: true, isTEDVisual: true },
+            { id: 'conclusion', title: 'Resultados e Impacto', subtitle: 'Valor Organizacional 2026', content: 'Una estructura diseñada para reducir la rotación mediante una Experiencia de Empleado (Ex) superior, acelerar la transformación digital eliminando la resistencia al cambio y aumentar la eficiencia operativa a través de la automatización estratégica TED.', icon: 'trending-up', points: ['Eficiencia Medible', 'Alineación Cultural', 'Madurez Digital'], isDark: true },
+            { id: 'final', title: '¡Gracias!', subtitle: 'SDO · Estrategia en Movimiento', content: 'Incondicionales con Risaralda', icon: 'heart', isFinal: true, isDark: true }
+        ];
+
+        let currentSlideIndex = 0;
+        let integrationMode = true;
+
+        const slideContainer = document.getElementById('slide-container');
+        const progressBar = document.getElementById('progress-bar');
+        const dotsContainer = document.getElementById('dots-container');
+        const prevBtnSide = document.getElementById('prev-btn-side');
+        const nextBtnSide = document.getElementById('next-btn-side');
+
+        window.onload = () => {
+            renderSlide();
+            lucide.createIcons();
+
+            // Hide preloader with a slight delay for emotional impact
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                preloader.classList.add('hidden');
+            }, 1800);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
+                    if (e.key === " " || e.key === "PageDown") e.preventDefault();
+                    nextSlide();
+                }
+                if (e.key === "ArrowLeft" || e.key === "PageUp") {
+                    if (e.key === "PageUp") e.preventDefault();
+                    prevSlide();
+                }
+            });
+        };
+
+        function toggleIntegrationMode() {
+            integrationMode = !integrationMode;
+            const btn = document.getElementById('integration-toggle');
+            document.body.classList.toggle('dark', integrationMode);
+            if (integrationMode) {
+                btn.className = "flex items-center gap-3 px-6 py-2.5 rounded-full font-black text-[10px] uppercase tracking-widest bg-amber-500 text-white shadow-lg";
+                btn.querySelector('span').innerText = 'Sinergias Activas';
+            } else {
+                btn.className = "flex items-center gap-3 px-6 py-2.5 rounded-full font-black text-[10px] uppercase tracking-widest bg-white/90 text-slate-600 shadow-md";
+                btn.querySelector('span').innerText = 'Ver Capas de Valor';
+            }
+            renderSlide();
+        }
+
+        function renderSlide() {
+            const slide = slides[currentSlideIndex];
+            const isDark = integrationMode || slide.isDark;
+            document.body.className = `transition-all duration-1000 font-sans ${isDark ? 'bg-indigo-950 text-slate-100' : 'bg-slate-50 text-slate-900'} min-h-screen`;
+            progressBar.style.width = `${((currentSlideIndex + 1) / slides.length) * 100}%`;
+            prevBtnSide.style.opacity = currentSlideIndex === 0 ? "0" : "1";
+            prevBtnSide.style.pointerEvents = currentSlideIndex === 0 ? "none" : "auto";
+            nextBtnSide.style.opacity = currentSlideIndex === slides.length - 1 ? "0" : "1";
+            nextBtnSide.style.pointerEvents = currentSlideIndex === slides.length - 1 ? "none" : "auto";
+
+            let visualHtml = '';
+            if (slide.isFinal) {
+                visualHtml = `<div class="flex flex-col items-center justify-center py-20 animate-fade-in text-center w-full col-span-2 relative overflow-hidden">
+                    <!-- Background aura -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+                    
+                    <div class="w-80 h-80 mb-16 flex items-center justify-center relative group">
+                        <div class="absolute inset-[-20%] bg-amber-500/10 rounded-full animate-pulse blur-3xl opacity-50"></div>
+                        <div class="absolute inset-[-10%] bg-white/5 rounded-full animate-ping opacity-20 duration-[3s]"></div>
+                        <div class="shiny-logo-container relative z-10 transition-transform duration-1000 group-hover:scale-110 w-full h-full flex items-center justify-center p-2 overflow-hidden rounded-full shadow-2xl ring-4 ring-white/10">
+                            <img src="https://i.imgur.com/cSs7YG2.jpeg" alt="Logo Final SDO" class="w-full h-full object-cover rounded-full">
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 relative z-20">
+                        <div class="text-6xl md:text-8xl font-black uppercase tracking-tighter text-gradient-amber mb-2 drop-shadow-2xl animate-fade-in">${slide.title}</div>
+                        <p class="text-xl md:text-3xl font-black uppercase tracking-[0.5em] text-white/40 mb-16 px-4">SDO · Estrategia en Movimiento</p>
+                        
+                        <div class="flex flex-col items-center gap-12">
+                            <div class="h-px w-48 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
+                            
+                            <!-- 3D Call to Action Button -->
+                            <button onclick="changeSlide(0)" class="node-3d bg-amber-500 text-white px-12 py-5 rounded-2xl text-sm font-black uppercase tracking-[0.3em] flex items-center gap-3 hover:bg-amber-600 active:scale-95 group">
+                                <i data-lucide="refresh-cw" class="w-5 h-5 group-hover:rotate-180 transition-transform duration-700"></i>
+                                Volver al Inicio
+                            </button>
+                            
+                            <div class="text-amber-500/80 font-black text-xs uppercase tracking-[0.8em] animate-pulse mt-4">
+                                Incondicionales con Risaralda
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            } else if (slide.isMap) visualHtml = buildMapTemplate(isDark);
+            else if (slide.isTEDVisual) visualHtml = buildTEDVisual(isDark);
+            else if (slide.adminTags) visualHtml = buildComparison(isDark, slide.adminTags);
+            else if (slide.highlights) visualHtml = buildHighlights(isDark, slide.highlights);
+            else if (slide.points) visualHtml = buildPoints(isDark, slide.points);
+
+            const isFullWidthContent = slide.isMap || slide.isFinal;
+            const isSlide1 = slide.id === 'vision';
+
+            slideContainer.innerHTML = `
+                <div class="grid grid-cols-1 ${isFullWidthContent ? '' : 'md:grid-cols-2'} gap-12 items-start fade-in px-4 md:px-12">
+                    ${slide.isFinal ? visualHtml : `
+                    <div class="${isFullWidthContent ? 'text-center mb-10' : 'space-y-6 md:sticky md:top-32'}">
+                        <div class="flex items-center gap-6 ${isFullWidthContent ? 'justify-center' : ''}">
+                            <div class="p-4 rounded-3xl backdrop-blur-xl shadow-2xl border ${isDark ? 'bg-white/10 border-white/20' : 'bg-white'}">
+                                <i data-lucide="${slide.icon}" class="w-14 h-14 ${isDark ? 'text-amber-400' : 'text-teal-600'}"></i>
+                            </div>
+                            <div class="text-left flex-1">
+                                <div class="flex items-center gap-4">
+                                    <span class="text-[11px] font-black uppercase tracking-[0.4em] ${isDark ? 'text-amber-400/80' : 'text-slate-400'}">Estrategia 2026</span>
+                                    <button onclick="toggleFullscreen()" title="Maximizar presentación" class="ml-auto p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 group">
+                                        <i data-lucide="maximize-2" class="w-4 h-4 ${isDark ? 'text-white' : 'text-slate-500'} group-hover:scale-110 transition-transform"></i>
+                                    </button>
+                                </div>
+                                <h1 class="${isSlide1 ? 'text-xl md:text-2xl text-white font-bold' : 'text-3xl md:text-5xl text-white'} font-black leading-tight tracking-tighter uppercase">
+                                    ${isSlide1 ? slide.subtitle : slide.title}
+                                </h1>
+                            </div>
+                        </div>
+                        ${!isSlide1 ? `<h2 class="text-2xl font-bold ${isDark ? 'text-amber-400' : 'text-teal-700'}">${slide.subtitle}</h2>` : ''}
+                        <p class="text-lg md:text-xl text-justify leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}">${slide.content}</p>
+                    </div>
+                    <div class="${isFullWidthContent ? 'w-full' : 'relative w-full'} ${isSlide1 ? 'pt-32' : ''}">${visualHtml}</div>
+                    `}
+                </div>`;
+            lucide.createIcons();
+            renderDots();
+        }
+
+        function renderDots() {
+            dotsContainer.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                const isActive = i === currentSlideIndex;
+                dot.className = `w-2 h-2 rounded-full transition-all duration-500 cursor-pointer ${isActive ? 'bg-teal-500 w-10' : 'bg-slate-400/30'}`;
+                dot.onclick = () => { currentSlideIndex = i; renderSlide(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function buildMapTemplate(isDark, isMaximized = false) {
+            const groupBg = isDark ? 'bg-indigo-950/20 border-white/5' : 'bg-slate-50/40 border-slate-100';
+
+            return `
+                <div class="rounded-[3rem] p-10 border shadow-2xl transition-all duration-1000 ${isDark ? 'bg-slate-900/60 border-white/10' : 'bg-white/95 border-slate-200'} relative flex flex-col items-center min-h-[fit-content] pt-20">
+                    
+                    ${!isMaximized ? `
+                    <button onclick="openMaximize()" class="absolute top-8 right-8 p-3 rounded-2xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 z-[60] shadow-lg">
+                        <i data-lucide="maximize-2" class="w-5 h-5 ${isDark ? 'text-amber-400' : 'text-slate-500'}"></i>
+                    </button>
+                    ` : ''}
+                    
+                    <div class="min-w-[1200px] flex flex-col items-center py-4 relative">
+                        
+                        <!-- ROOT: Subdirección Desarrollo Organizacional -->
+                        <div class="relative z-20 mb-2">
+                            ${buildNode('root', 'large')}
+                        </div>
+
+                        <!-- CENTRAL SPINE -->
+                        <div class="w-0.5 h-[420px] bg-slate-400 absolute top-20 left-1/2 -translate-x-1/2 opacity-30 z-10"></div>
+
+                        <div class="relative w-full flex">
+                            
+                            <!-- LADO IZQUIERDO -->
+                            <div class="w-1/2 flex flex-col items-end pr-0 relative pt-4 gap-8">
+                                
+                                <!-- Cultura y Equipo -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute right-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -mr-48"></div>
+                                    ${buildNode('equipo_psicosocial', 'small')}
+                                    <div class="w-6 h-px bg-slate-300"></div>
+                                    <i data-lucide="arrow-left" class="w-4 h-4 text-slate-300 -mx-2"></i>
+                                    ${buildNode('cultura_bienestar', 'medium')}
+                                </div>
+
+                                <!-- Selección y Empleo -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute right-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -mr-48"></div>
+                                    ${buildNode('empleo_talento_nuevo', 'small')}
+                                    <div class="w-6 h-px border-t border-dashed border-slate-400"></div>
+                                    <i data-lucide="arrow-left" class="w-4 h-4 text-slate-300 -mx-2"></i>
+                                    ${buildNode('seleccion_personal', 'medium')}
+                                </div>
+
+                                <!-- Desarrollo y formación -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute right-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -mr-48"></div>
+                                    ${buildNode('desarrollo_formacion', 'medium')}
+                                </div>
+
+                                <!-- Transformación y Vectores -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute right-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -mr-48"></div>
+                                    ${buildNode('vector_cultura', 'small')}
+                                    <div class="w-6 h-px border-t border-dashed border-slate-400"></div>
+                                    <i data-lucide="arrow-left" class="w-4 h-4 text-slate-300 -mx-2"></i>
+                                    ${buildNode('transformacion_digital_nuevo', 'medium')}
+                                </div>
+
+                                <!-- Gestión de la Innovación -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute right-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -mr-48"></div>
+                                    ${buildNode('gestion_innovacion', 'medium')}
+                                </div>
+                            </div>
+
+                            <!-- LADO DERECHO -->
+                            <div class="w-1/2 flex flex-col items-start pl-0 relative pt-4 gap-8">
+                                
+                                <!-- Gestión Competencias e Historias -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute left-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -ml-48"></div>
+                                    ${buildNode('gestion_competencias', 'medium')}
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-slate-300 -mx-2"></i>
+                                    <div class="w-6 h-px bg-slate-300"></div>
+                                    ${buildNode('historias_laborales', 'small')}
+                                </div>
+
+                                <!-- Nómina -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute left-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -ml-48"></div>
+                                    ${buildNode('nomina_seguridad', 'medium')}
+                                </div>
+
+                                <!-- Relaciones Laborales -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute left-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -ml-48"></div>
+                                    ${buildNode('relaciones_laborales', 'medium')}
+                                    <div class="w-10 h-px bg-slate-300"></div>
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-slate-300 -mx-2"></i>
+                                    <div class="flex flex-col gap-3 pl-6 border-l-2 border-slate-200 relative">
+                                        <div class="absolute -left-[2px] top-1/4 w-4 h-px bg-slate-200"></div>
+                                        <div class="absolute -left-[2px] top-3/4 w-4 h-px bg-slate-200"></div>
+                                        ${buildNode('control_disciplinario', 'small')}
+                                        ${buildNode('negociaciones_col_nuevo', 'small')}
+                                    </div>
+                                </div>
+
+                                <!-- Productividad -->
+                                <div class="flex items-center gap-4 relative">
+                                    <div class="absolute left-0 top-1/2 w-48 h-0.5 bg-slate-400 opacity-20 -ml-48"></div>
+                                    ${buildNode('productividad', 'medium')}
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Color Legend -->
+                        <div class="mt-8 flex flex-wrap justify-center gap-6 p-6 rounded-3xl bg-slate-50/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/10">
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-[#78A49B]"></div>
+                                <span class="text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-600'}">Procesos Misionales</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-[#F5C2C2]"></div>
+                                <span class="text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-600'}">Apoyo y Cultura</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-[#FEFE96]"></div>
+                                <span class="text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-600'}">Aliados de Transformación</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>`;
+        }
+
+        function buildNode(id, size = 'medium') {
+            const node = detailedNodes[id];
+            if (!node) return '';
+            const isRoot = id === 'root';
+
+            let classes = "flex items-center justify-center text-center font-black uppercase transition-all duration-500 cursor-pointer node-3d ";
+
+            if (size === 'mini') {
+                classes += "w-[130px] h-[34px] text-[7.5px] rounded-lg px-2 leading-[0.85] ";
+            } else if (size === 'small') {
+                classes += "w-[160px] h-[45px] text-[9px] rounded-xl px-4 leading-[0.9] ";
+            } else if (size === 'medium') {
+                classes += "w-[190px] h-[55px] text-[10.5px] rounded-[1.25rem] px-6 leading-[1] ";
+            } else if (size === 'large') {
+                classes += "w-[340px] h-[80px] text-[12px] rounded-[1.5rem] px-8 py-4 ";
+            }
+
+            return `<div onclick="openModal(event, '${id}')" class="${classes} border border-black/5 ${integrationMode && node.isPulse ? 'node-pulse border-amber-400' : ''} ${node.color}">
+                <span class="break-words max-w-full">${node.title}</span>
+            </div>`;
+        }
+
+        function buildComparison(isDark, tags) {
+            const commonCard = `p-10 rounded-[3.5rem] border transition-all duration-700 relative overflow-hidden group min-h-[280px] flex flex-col justify-center ${isDark ? 'bg-slate-800/40 border-slate-700' : 'bg-white/40 border-slate-200'} backdrop-blur-sm shadow-sm`;
+            const titleStyle = "text-xl font-black uppercase tracking-[0.1em] m-0 text-center";
+
+            return `<div class="space-y-6 fade-in px-4 font-urbanist max-w-4xl mx-auto">
+                <!-- Parte Administrativa (Base) -->
+                <div class="${commonCard}">
+                    <div class="absolute top-0 right-0 p-8 opacity-5 -mr-6 -mt-6 group-hover:scale-110 transition-transform ${isDark ? 'text-white' : 'text-slate-900'}">
+                        <i data-lucide="building-2" class="w-32 h-32"></i>
+                    </div>
+                    <div class="flex flex-col items-center gap-4 mb-8 relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 rounded-xl ${isDark ? 'bg-slate-700 text-slate-200' : 'bg-slate-200 text-slate-500'} shadow-inner border ${isDark ? 'border-slate-600' : 'border-slate-300'}"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+                            <h3 class="${titleStyle} ${isDark ? 'text-white' : 'text-slate-500'}">Gestión Administrativa</h3>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-3 relative z-10">
+                        ${tags.map(t => `<span class="px-6 py-3 rounded-2xl text-[11px] font-black ${isDark ? 'bg-slate-700 text-slate-200 border-white/5' : 'bg-white text-slate-700 border-slate-100/50'} shadow-sm border flex items-center gap-2 transition-all hover:scale-105 uppercase tracking-tight"><i data-lucide="layers" class="w-4 h-4 text-indigo-400 opacity-60"></i>${t}</span>`).join('')}
+                    </div>
+                </div>
+
+                <!-- Transición -->
+                <div class="flex justify-center -my-3 relative z-20">
+                    <div class="bg-amber-500 p-2 rounded-full shadow-2xl hover:scale-110 transition-transform cursor-pointer border-[3px] border-white">
+                        <i data-lucide="arrow-down" class="w-5 h-5 text-white"></i>
+                    </div>
+                </div>
+
+                <!-- Parte SDO (Evolución Balanceada en 2 Líneas) -->
+                <div class="${commonCard} border-amber-500/50 dark:border-amber-500 ${isDark ? 'bg-slate-900/60' : 'bg-gradient-to-br from-amber-50 to-white'} shadow-2xl shadow-amber-500/10 border-2">
+                    <div class="absolute -bottom-10 -right-10 p-6 opacity-5 group-hover:scale-125 transition-transform group-hover:rotate-12 duration-1000 ${isDark ? 'text-amber-500' : 'text-amber-600'}">
+                        <i data-lucide="trending-up" class="w-48 h-48"></i>
+                    </div>
+                    <div class="flex flex-col items-center mb-10 relative z-10 text-center">
+                        <h3 class="${titleStyle} ${isDark ? 'text-amber-400' : 'text-amber-500'}">Desarrollo Organizacional</h3>
+                    </div>
+                    
+                    <div class="flex flex-col items-center gap-3 relative z-10 w-full px-8">
+                        <!-- Línea 1: 2 Pastillas Reducidas -->
+                        <div class="flex flex-wrap justify-center gap-3 w-full">
+                            <span class="px-5 py-2.5 rounded-xl text-[10px] font-black bg-amber-500 text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 hover:bg-amber-600 uppercase tracking-wide border border-white/20 min-w-[160px]">Enfoque Diferenciado</span>
+                            <span class="px-5 py-2.5 rounded-xl text-[10px] font-black bg-amber-500 text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 hover:bg-amber-600 uppercase tracking-wide border border-white/20 min-w-[160px]">Agilidad de Decisión</span>
+                        </div>
+                        <!-- Línea 2: 1 Pastilla Centrada Reducida -->
+                        <div class="flex justify-center w-full">
+                            <span class="px-8 py-2.5 rounded-xl text-[10px] font-black bg-amber-500 text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 hover:bg-amber-600 uppercase tracking-wide border border-white/20 min-w-[220px]">Especialización Metodológica</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function buildHighlights(isDark, items) {
+            return `<div class="space-y-5 fade-in px-4">${items.map((h, i) => `<div class="p-6 rounded-[2rem] shadow-2xl flex gap-6 items-center transition-all hover:scale-105 ${isDark ? 'bg-white/5 border border-white/10' : 'bg-white border-slate-100'}"><div class="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-2xl ${isDark ? 'bg-amber-500 text-white' : 'bg-indigo-100 text-indigo-600'}">${i + 1}</div><div class="text-left"><div class="font-black text-lg ${isDark ? 'text-white' : 'text-slate-900'}">${h.label}</div><div class="text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium">${h.desc}</div></div></div>`).join('')}</div>`;
+        }
+
+        function buildTEDVisual(isDark, isMaximized = false) {
+            return `<div class="p-12 rounded-[4rem] border shadow-2xl transition-all duration-1000 ${isDark ? 'bg-slate-900/50 border-amber-500/20' : 'bg-white border-slate-200'} mx-4 relative overflow-hidden">${!isMaximized ? `<button onclick="openMaximize()" class="absolute top-8 right-8 p-3 rounded-2xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 z-[60] shadow-lg"><i data-lucide="maximize-2" class="w-5 h-5 ${isDark ? 'text-amber-400' : 'text-slate-500'}"></i></button>` : ''}<div class="flex flex-col md:flex-row items-center justify-between gap-12 relative z-10"><div class="flex-1 grid grid-cols-1 gap-6"><div class="p-8 rounded-[3rem] border-2 border-indigo-500/30 bg-indigo-500/5 group"><div class="flex items-center gap-5 mb-4"><div class="p-4 rounded-2xl bg-indigo-500 text-white shadow-lg"><i data-lucide="monitor" class="w-8 h-8"></i></div><h3 class="text-2xl font-black uppercase ${isDark ? 'text-indigo-400' : 'text-indigo-900'}">Tecnología</h3></div><p class="text-sm font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}">Automatización de tareas repetitivas.</p></div><div class="p-8 rounded-[3rem] border-2 border-amber-500/30 bg-amber-500/5 group"><div class="flex items-center gap-5 mb-4"><div class="p-4 rounded-2xl bg-amber-500 text-white shadow-lg"><i data-lucide="compass" class="w-8 h-8"></i></div><h3 class="text-2xl font-black uppercase ${isDark ? 'text-amber-400' : 'text-amber-900'}">Estrategia</h3></div><p class="text-sm font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}">Alineación de objetivos institucionales.</p></div><div class="p-8 rounded-[3rem] border-2 border-emerald-500/30 bg-emerald-500/5 group"><div class="flex items-center gap-5 mb-4"><div class="p-4 rounded-2xl bg-emerald-500 text-white shadow-lg"><i data-lucide="bar-chart-3" class="w-8 h-8"></i></div><h3 class="text-2xl font-black uppercase ${isDark ? 'text-emerald-400' : 'text-emerald-900'}">Desempeño</h3></div><p class="text-sm font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}">Resultados de alta productividad.</p></div></div><div class="w-full md:w-1/3 flex flex-col items-center justify-center relative"><div class="relative w-64 h-64"><div class="absolute inset-0 rounded-full border-4 border-dashed border-slate-300 animate-[spin_20s_linear_infinite]"></div><div class="absolute inset-4 rounded-full border-4 border-indigo-500/20"></div><div class="absolute inset-0 flex items-center justify-center"><div class="text-center"><div class="text-6xl font-black text-amber-500">TED</div><div class="text-[10px] uppercase font-black tracking-[0.3em] ${isDark ? 'text-slate-500' : 'text-slate-400'}">Ecosistema 2026</div></div></div></div></div></div></div>`;
+        }
+
+        function buildPoints(isDark, points) {
+            return `<div class="grid grid-cols-1 gap-6 fade-in px-4">${points.map(p => `<div class="p-7 rounded-[2.5rem] flex items-center gap-6 border node-3d ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-white border-slate-100 text-slate-800'}"><div class="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-600"><i data-lucide="award" class="w-6 h-6"></i></div><span class="font-black text-lg leading-tight uppercase tracking-tight">${p}</span></div>`).join('')}</div>`;
+        }
+
+        function nextSlide() { if (currentSlideIndex < slides.length - 1) { currentSlideIndex++; renderSlide(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }
+        function prevSlide() { if (currentSlideIndex > 0) { currentSlideIndex--; renderSlide(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }
+        function changeSlide(index) { currentSlideIndex = index; renderSlide(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        function openModal(e, id) {
+            const node = detailedNodes[id];
+            if (!node) return;
+            const modal = document.getElementById('node-modal');
+            const content = document.getElementById('modal-content');
+
+            document.getElementById('modal-title').innerText = node.title;
+            document.getElementById('modal-desc').innerText = node.desc || 'Información estratégica.';
+            document.getElementById('modal-vision').innerText = node.vision || 'N/A';
+            document.getElementById('modal-challenge').innerText = `"${node.challenge || 'Definiendo reto'}"`;
+
+            // Posicionamiento inteligente
+            modal.style.display = 'block'; // Mostrar temporalmente para medir
+            const rect = e.currentTarget.getBoundingClientRect();
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+            const cardWidth = content.offsetWidth;
+            const cardHeight = content.offsetHeight;
+
+            let posX = rect.right + 20;
+            let posY = rect.top - 10;
+
+            // Ajuste horizontal (Evitar desborde derecho)
+            if (posX + cardWidth > winWidth - 20) {
+                posX = rect.left - cardWidth - 20;
+            }
+
+            // Ajuste vertical (Evitar desborde inferior)
+            if (posY + cardHeight > winHeight - 20) {
+                posY = winHeight - cardHeight - 20;
+            }
+
+            // Ajuste vertical (Evitar desborde superior)
+            if (posY < 80) posY = 80; // Margen para el header
+
+            content.style.left = posX + 'px';
+            content.style.top = posY + 'px';
+
+            modal.classList.remove('hidden');
+            modal.classList.add('block');
+
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('node-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.add('scale-95', 'opacity-0');
+            content.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('block');
+            }, 300);
+        }
+
+        let currentScale = 1; let offsetX = 0; let offsetY = 0; let isDragging = false; let startX, startY;
+
+        function openMaximize() {
+            const slide = slides[currentSlideIndex];
+            const isDark = integrationMode || slide.isDark;
+            const modal = document.getElementById('maximize-modal');
+            const wrapper = document.getElementById('zoom-wrapper');
+            resetZoom();
+            let visualHtml = '';
+            if (slide.isMap) visualHtml = buildMapTemplate(isDark, true);
+            else if (slide.isTEDVisual) visualHtml = buildTEDVisual(isDark, true);
+            wrapper.innerHTML = visualHtml;
+            modal.classList.replace('hidden', 'flex');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+            initPanZoom();
+        }
+
+        function closeMaximize() {
+            const modal = document.getElementById('maximize-modal');
+            modal.classList.replace('flex', 'hidden');
+            document.body.style.overflow = 'auto';
+            if (document.fullscreenElement) document.exitFullscreen();
+        }
+
+        function initPanZoom() {
+            const container = document.getElementById('maximize-modal-content');
+            container.onwheel = (e) => { e.preventDefault(); const delta = e.deltaY > 0 ? -0.1 : 0.1; changeZoom(delta); };
+            container.onmousedown = (e) => { isDragging = true; startX = e.clientX - offsetX; startY = e.clientY - offsetY; container.style.cursor = 'grabbing'; };
+            window.onmousemove = (e) => { if (!isDragging) return; offsetX = e.clientX - startX; offsetY = e.clientY - startY; applyTransform(); };
+            window.onmouseup = () => { isDragging = false; container.style.cursor = 'grab'; };
+        }
+
+        function changeZoom(delta) { currentScale = Math.min(Math.max(currentScale + delta, 0.5), 3); applyTransform(); }
+        function resetZoom() { currentScale = 1; offsetX = 0; offsetY = 0; applyTransform(); }
+        function applyTransform() { const wrapper = document.getElementById('zoom-wrapper'); if (wrapper) wrapper.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${currentScale})`; }
+        function toggleFullscreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => console.log(err)); else document.exitFullscreen(); }
+        function toggleAppFullscreen() { const modal = document.getElementById('maximize-modal'); if (!document.fullscreenElement) modal.requestFullscreen().catch(err => console.log(err)); else document.exitFullscreen(); }
+    </script>
+</body>
+
+</html>
